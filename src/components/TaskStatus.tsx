@@ -58,13 +58,16 @@ export default function TaskStatus({ taskId, onComplete }: TaskStatusProps) {
   }, [pdfUrl, onComplete]);
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-4">
+    <div className="max-w-2xl mx-auto p-6 space-y-4" role="region" aria-labelledby="story-progress-heading">
+      <h2 id="story-progress-heading" className="sr-only">Story Creation Progress</h2>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <div 
             className={`h-2.5 w-2.5 rounded-full ${
-              isConnected ? 'bg-green-500' : 'bg-red-500'
+              isConnected ? 'bg-emerald-500' : 'bg-red-500'
             }`} 
+            role="status"
+            aria-label={isConnected ? 'Connected to real-time updates' : 'Disconnected from real-time updates'}
           />
           <span className="text-sm text-gray-600">
             {isConnected ? 'Real-time updates' : 
@@ -75,7 +78,7 @@ export default function TaskStatus({ taskId, onComplete }: TaskStatusProps) {
           <button
             onClick={handleManualCheck}
             disabled={isCheckingStatus}
-            className="text-sm px-4 py-1 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-sm px-4 py-1 bg-orange-100 rounded-md hover:bg-orange-200 disabled:opacity-50 disabled:cursor-not-allowed text-orange-700"
           >
             {isCheckingStatus ? 'Checking...' : 'Check Status'}
           </button>
@@ -101,9 +104,16 @@ export default function TaskStatus({ taskId, onComplete }: TaskStatusProps) {
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="font-medium text-gray-700">Creating your magical story</span>
-            <span className="text-blue-600 font-semibold">{progress}%</span>
+            <span className="text-blue-600 font-semibold" aria-label={`${progress} percent complete`}>{progress}%</span>
           </div>
-          <div className="w-full bg-gradient-to-r from-blue-100 to-purple-100 rounded-full h-3 shadow-inner">
+          <div 
+            className="w-full bg-gradient-to-r from-blue-100 to-purple-100 rounded-full h-3 shadow-inner"
+            role="progressbar"
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Story creation progress"
+          >
             <div
               className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
               style={{ width: `${progress}%` }}
@@ -112,35 +122,53 @@ export default function TaskStatus({ taskId, onComplete }: TaskStatusProps) {
         </div>
 
         {/* Progress Steps Indicator */}
-        <div className="grid grid-cols-4 gap-2 text-xs">
-          <div className={`text-center p-2 rounded ${progress >= 25 ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-500'}`}>
-            <div className="text-lg mb-1">{progress >= 25 ? '✅' : '⏳'}</div>
+        <div className="grid grid-cols-4 gap-2 text-xs" role="list" aria-label="Story creation milestones">
+          <div className={`text-center p-2 rounded ${progress >= 25 ? 'bg-emerald-50 text-emerald-700' : 'bg-orange-50 text-orange-400'}`} role="listitem">
+            <div className="text-lg mb-1" aria-hidden="true">{progress >= 25 ? '✅' : '⏳'}</div>
             <div>Planning</div>
+            <span className="sr-only">{progress >= 25 ? 'Completed' : 'In progress'}</span>
           </div>
-          <div className={`text-center p-2 rounded ${progress >= 50 ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-500'}`}>
-            <div className="text-lg mb-1">{progress >= 50 ? '✅' : '⏳'}</div>
+          <div className={`text-center p-2 rounded ${progress >= 50 ? 'bg-emerald-50 text-emerald-700' : 'bg-pink-50 text-pink-400'}`} role="listitem">
+            <div className="text-lg mb-1" aria-hidden="true">{progress >= 50 ? '✅' : '⏳'}</div>
             <div>Writing</div>
+            <span className="sr-only">{progress >= 50 ? 'Completed' : 'Pending'}</span>
           </div>
-          <div className={`text-center p-2 rounded ${progress >= 75 ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-500'}`}>
-            <div className="text-lg mb-1">{progress >= 75 ? '✅' : '⏳'}</div>
+          <div className={`text-center p-2 rounded ${progress >= 75 ? 'bg-emerald-50 text-emerald-700' : 'bg-purple-50 text-purple-400'}`} role="listitem">
+            <div className="text-lg mb-1" aria-hidden="true">{progress >= 75 ? '✅' : '⏳'}</div>
             <div>Illustrating</div>
+            <span className="sr-only">{progress >= 75 ? 'Completed' : 'Pending'}</span>
           </div>
-          <div className={`text-center p-2 rounded ${progress >= 100 ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-500'}`}>
-            <div className="text-lg mb-1">{progress >= 100 ? '✅' : '⏳'}</div>
+          <div className={`text-center p-2 rounded ${progress >= 100 ? 'bg-emerald-50 text-emerald-700' : 'bg-yellow-50 text-yellow-400'}`} role="listitem">
+            <div className="text-lg mb-1" aria-hidden="true">{progress >= 100 ? '✅' : '⏳'}</div>
             <div>Finalizing</div>
+            <span className="sr-only">{progress >= 100 ? 'Completed' : 'Pending'}</span>
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-md">
-          <div className="flex items-center">
-            <div className="text-red-400 mr-3">
-              <span className="text-xl">😟</span>
+        <div className="bg-gradient-to-r from-orange-50 via-red-50 to-pink-50 border-l-4 border-orange-400 p-4 rounded-r-md shadow-sm">
+          <div className="flex items-start">
+            <div className="text-orange-400 mr-3 flex-shrink-0">
+              <span className="text-xl">�</span>
             </div>
             <div>
-              <h4 className="text-red-800 font-medium">Oops! Something went wrong</h4>
-              <p className="text-red-700 text-sm mt-1">{error}</p>
+              <h4 className="text-orange-800 font-semibold">Don't Worry - We're Still Working on Your Story!</h4>
+              <p className="text-orange-700 text-sm mt-1">
+                There was a small hiccup while creating your magical story, but our story elves are still working hard behind the scenes.
+              </p>
+              <div className="bg-orange-100 rounded-md p-2 mt-3">
+                <p className="text-orange-800 text-xs font-medium flex items-start">
+                  <span className="mr-1 flex-shrink-0">💡</span>
+                  <span>Try refreshing this page in a few moments, or go back and create a new story if this one seems stuck!</span>
+                </p>
+              </div>
+              {process.env.NODE_ENV === 'development' && (
+                <details className="mt-2">
+                  <summary className="text-xs text-orange-600 cursor-pointer">Technical Details (for developers)</summary>
+                  <p className="text-xs text-orange-600 mt-1 font-mono bg-orange-50 p-2 rounded">{error}</p>
+                </details>
+              )}
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ export function useTaskWebSocket(taskId: string): UseTaskWebSocketResult {
   const connect = useCallback(() => {
     // Stop trying to reconnect after max attempts
     if (connectionAttempts >= config.WS_RECONNECT_ATTEMPTS) {
-      setError('Unable to establish WebSocket connection. Using manual status checks instead.');
+      setError('Having trouble getting live updates for your story. Don\'t worry - your story is still being created! Try refreshing the page to check progress.');
       return;
     }
 
@@ -167,7 +167,7 @@ export function useTaskWebSocket(taskId: string): UseTaskWebSocketResult {
       if (isDevelopment) {
         console.error('Failed to create WebSocket:', error);
       }
-      setError('Failed to create WebSocket connection');
+      setError('Having trouble connecting to get live story updates. Your story is still being created!');
     }
   }, [taskId, connectionAttempts, resetReconnectTimeout]);
 

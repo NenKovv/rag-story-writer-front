@@ -25,7 +25,7 @@ export default function App() {
       const { task_id } = await generateBook(request);
       setTaskId(task_id);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to start story generation');
+      setError(err instanceof Error ? err.message : 'Unable to start creating your magical story. Please try again!');
     } finally {
       setIsLoading(false);
     }
@@ -59,14 +59,14 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="bg-white shadow-lg border-b-4 border-purple-400">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-100">
+      <header className="bg-white shadow-lg border-b-4 border-orange-400" role="banner">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              ✨ Story Weaver ✨
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-2">
+              <span aria-label="Story Weaver - Magical Story Creation App">✨ Story Weaver ✨</span>
             </h1>
-            <p className="text-lg text-gray-600">Create magical AI-powered storybooks for children</p>
+            <p className="text-lg text-gray-600" role="doc-subtitle">Create magical AI-powered storybooks for children</p>
           </div>
         </div>
       </header>
@@ -76,26 +76,30 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <nav aria-label="Story creation progress" className="flex-1 flex justify-center">
-              <ol className="flex items-center space-x-4 sm:space-x-8">
+              <ol className="flex items-center space-x-4 sm:space-x-8" role="list">
                 {/* Step 1: Story Details */}
-                <li className="flex items-center">
+                <li className="flex items-center" role="listitem">
                   <div className="flex items-center">
-                    <div className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 text-sm font-semibold ${
-                      !taskId && !pdfUrl
-                        ? 'bg-blue-600 border-blue-600 text-white' 
-                        : 'bg-green-100 border-green-500 text-green-700'
-                    }`}>
+                    <div 
+                      className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 text-sm font-semibold ${
+                        !taskId && !pdfUrl
+                          ? 'bg-gradient-to-r from-orange-500 to-pink-500 border-orange-500 text-white' 
+                          : 'bg-gradient-to-r from-green-400 to-emerald-500 border-green-400 text-white'
+                      }`}
+                      aria-label={`Step 1: Story Details - ${!taskId && !pdfUrl ? 'Current step' : 'Completed'}`}
+                      role="img"
+                    >
                       {!taskId && !pdfUrl ? '1' : '✓'}
                     </div>
                     {/* Desktop text - only show on larger screens */}
                     <span className={`ml-3 text-sm font-medium hidden sm:inline ${
-                      !taskId && !pdfUrl ? 'text-blue-600' : 'text-green-700'
+                      !taskId && !pdfUrl ? 'text-orange-600' : 'text-green-700'
                     }`}>
                       Story Details
                     </span>
                     {/* Mobile text - only show on small screens */}
                     <span className={`ml-3 text-sm font-medium inline sm:hidden ${
-                      !taskId && !pdfUrl ? 'text-blue-600' : 'text-green-700'
+                      !taskId && !pdfUrl ? 'text-orange-600' : 'text-green-700'
                     }`}>
                       Details
                     </span>
@@ -105,20 +109,26 @@ export default function App() {
                 {/* Connector */}
                 <li className="flex items-center">
                   <div className={`w-8 sm:w-16 h-0.5 ${
-                    taskId || pdfUrl ? 'bg-green-500' : 'bg-gray-300'
+                    taskId || pdfUrl ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gray-300'
                   }`} />
                 </li>
 
                 {/* Step 2: Generation */}
-                <li className="flex items-center">
+                <li className="flex items-center" role="listitem">
                   <div className="flex items-center">
-                    <div className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 text-sm font-semibold ${
-                      taskId && !pdfUrl
-                        ? 'bg-blue-600 border-blue-600 text-white'
+                    <div 
+                      className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 text-sm font-semibold ${
+                        taskId && !pdfUrl
+                          ? 'bg-gradient-to-r from-orange-500 to-pink-500 border-orange-500 text-white shadow-lg'
                         : pdfUrl
-                          ? 'bg-green-100 border-green-500 text-green-700'
-                          : 'bg-gray-100 border-gray-300 text-gray-500'
-                    }`}>
+                          ? 'bg-gradient-to-r from-green-400 to-emerald-500 border-emerald-500 text-white shadow-lg'
+                          : 'bg-gradient-to-r from-orange-200 to-pink-200 border-orange-300 text-orange-600'
+                      }`}
+                      aria-label={`Step 2: Creating Story - ${
+                        taskId && !pdfUrl ? 'In progress' : pdfUrl ? 'Completed' : 'Not started'
+                      }`}
+                      role="img"
+                    >
                       {taskId && !pdfUrl ? (
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       ) : pdfUrl ? '✓' : '2'}
@@ -126,9 +136,9 @@ export default function App() {
                     {/* Desktop text */}
                     <span className={`ml-3 text-sm font-medium hidden sm:inline ${
                       taskId && !pdfUrl
-                        ? 'text-blue-600'
+                        ? 'text-orange-600'
                         : pdfUrl
-                          ? 'text-green-700'
+                          ? 'text-emerald-700'
                           : 'text-gray-500'
                     }`}>
                       Creating Story
@@ -136,9 +146,9 @@ export default function App() {
                     {/* Mobile text */}
                     <span className={`ml-3 text-sm font-medium inline sm:hidden ${
                       taskId && !pdfUrl
-                        ? 'text-blue-600'
+                        ? 'text-orange-600'
                         : pdfUrl
-                          ? 'text-green-700'
+                          ? 'text-emerald-700'
                           : 'text-gray-500'
                     }`}>
                       Creating
@@ -149,29 +159,33 @@ export default function App() {
                 {/* Connector */}
                 <li className="flex items-center">
                   <div className={`w-8 sm:w-16 h-0.5 ${
-                    pdfUrl ? 'bg-green-500' : 'bg-gray-300'
+                    pdfUrl ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-orange-200 to-pink-200'
                   }`} />
                 </li>
 
                 {/* Step 3: Your Story */}
-                <li className="flex items-center">
+                <li className="flex items-center" role="listitem">
                   <div className="flex items-center">
-                    <div className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 text-sm font-semibold ${
-                      pdfUrl
-                        ? 'bg-blue-600 border-blue-600 text-white'
-                        : 'bg-gray-100 border-gray-300 text-gray-500'
-                    }`}>
+                    <div 
+                      className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 text-sm font-semibold ${
+                        pdfUrl
+                          ? 'bg-gradient-to-r from-purple-500 to-pink-500 border-purple-500 text-white shadow-lg'
+                          : 'bg-gradient-to-r from-orange-200 to-pink-200 border-orange-300 text-orange-600'
+                      }`}
+                      aria-label={`Step 3: Your Story - ${pdfUrl ? 'Completed' : 'Not started'}`}
+                      role="img"
+                    >
                       {pdfUrl ? '✓' : '3'}
                     </div>
                     {/* Desktop text */}
                     <span className={`ml-3 text-sm font-medium hidden sm:inline ${
-                      pdfUrl ? 'text-blue-600' : 'text-gray-500'
+                      pdfUrl ? 'text-purple-600' : 'text-gray-500'
                     }`}>
                       Your Story
                     </span>
                     {/* Mobile text */}
                     <span className={`ml-3 text-sm font-medium inline sm:hidden ${
-                      pdfUrl ? 'text-blue-600' : 'text-gray-500'
+                      pdfUrl ? 'text-purple-600' : 'text-gray-500'
                     }`}>
                       Story
                     </span>
@@ -187,7 +201,7 @@ export default function App() {
                 {taskId && !pdfUrl && (
                   <button
                     onClick={handleEditDetails}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors focus:ring-2 focus:ring-blue-300 border border-blue-200"
+                    className="flex items-center px-3 py-2 text-sm font-medium text-orange-600 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors focus:ring-2 focus:ring-orange-300 border border-orange-200 shadow-sm"
                     aria-label="Cancel generation and edit story details"
                   >
                     <span className="mr-2">⬅️</span>
@@ -199,7 +213,7 @@ export default function App() {
                 {/* Start Over Button */}
                 <button
                   onClick={handleStartOver}
-                  className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors focus:ring-2 focus:ring-gray-300"
+                  className="flex items-center px-3 py-2 text-sm font-medium text-pink-600 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors focus:ring-2 focus:ring-pink-300 border border-pink-200 shadow-sm"
                   aria-label="Start creating a new story"
                 >
                   <span className="mr-2">🔄</span>
@@ -217,8 +231,8 @@ export default function App() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 mx-4 max-w-md w-full shadow-xl">
             <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
-                <span className="text-yellow-600 text-xl">⚠️</span>
+              <div className="w-10 h-10 bg-gradient-to-r from-orange-100 to-yellow-100 rounded-full flex items-center justify-center mr-3 shadow-sm">
+                <span className="text-orange-600 text-xl">⚠️</span>
               </div>
               <h3 className="text-lg font-semibold text-gray-900">Cancel Story Generation?</h3>
             </div>
@@ -228,13 +242,13 @@ export default function App() {
             <div className="flex space-x-3 justify-end">
               <button
                 onClick={cancelEditDetails}
-                className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors shadow-sm"
               >
                 Keep Generating
               </button>
               <button
                 onClick={confirmEditDetails}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-colors shadow-lg"
               >
                 Yes, Edit Details
               </button>
@@ -243,9 +257,9 @@ export default function App() {
         </div>
       )}
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8" role="main">
         {error && (
-          <div className="max-w-2xl mx-auto mb-6">
+          <div className="max-w-2xl mx-auto mb-6" role="alert" aria-live="polite">
             <ErrorBanner 
               message={error} 
               onDismiss={() => setError(undefined)} 
@@ -254,32 +268,32 @@ export default function App() {
         )}
 
         {!taskId && (
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
+          <section aria-labelledby="story-form-heading" className="max-w-2xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-orange-100">
               <BookRequestForm 
                 onSubmit={handleSubmit} 
                 isLoading={isLoading}
                 initialData={formData}
               />
             </div>
-          </div>
+          </section>
         )}
 
         {taskId && !pdfUrl && (
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
+          <section aria-labelledby="story-progress-heading" className="max-w-3xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-pink-100">
               <TaskStatus 
                 taskId={taskId} 
                 onComplete={handleTaskComplete} 
               />
             </div>
-          </div>
+          </section>
         )}
 
         {pdfUrl && (
-          <div className="bg-white rounded-2xl shadow-xl mx-4 lg:mx-8 p-6 border border-blue-100">
+          <section aria-labelledby="story-preview-heading" className="bg-white rounded-2xl shadow-xl mx-4 lg:mx-8 p-6 border border-purple-100">
             <PDFPreview pdfUrl={pdfUrl} />
-          </div>
+          </section>
         )}
       </main>
     </div>

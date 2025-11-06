@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -16,6 +16,37 @@ export default function PDFPreview({ pdfUrl }: PDFPreviewProps) {
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
   const [error, setError] = useState<string>();
+
+  // Keyboard navigation for PDF pages
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!numPages) return;
+      
+      switch (event.key) {
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          event.preventDefault();
+          setPageNumber(page => Math.max(1, page - 1));
+          break;
+        case 'ArrowRight':
+        case 'ArrowDown':
+          event.preventDefault();
+          setPageNumber(page => Math.min(numPages, page + 1));
+          break;
+        case 'Home':
+          event.preventDefault();
+          setPageNumber(1);
+          break;
+        case 'End':
+          event.preventDefault();
+          setPageNumber(numPages);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [numPages]);
 
   // Properly encode URL with Cyrillic characters
   const encodedPdfUrl = encodeURI(pdfUrl);
@@ -67,13 +98,14 @@ export default function PDFPreview({ pdfUrl }: PDFPreviewProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-4">
+    <div className="max-w-4xl mx-auto p-6 space-y-4" role="region" aria-labelledby="story-preview-heading">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Your Generated Story</h2>
+        <h2 id="story-preview-heading" className="text-xl font-semibold">Your Generated Story</h2>
         <a
           href={encodedPdfUrl}
           download
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-300"
+          aria-label="Download your story as a PDF file"
         >
           Download PDF
         </a>
@@ -114,26 +146,45 @@ export default function PDFPreview({ pdfUrl }: PDFPreviewProps) {
           </div>
 
           {numPages && (
-            <div className="flex justify-center items-center space-x-4">
+            <nav className="flex justify-center items-center space-x-4" aria-label="PDF page navigation">
               <button
                 onClick={() => setPageNumber(page => Math.max(1, page - 1))}
                 disabled={pageNumber <= 1}
-                className="px-3 py-1 bg-gray-100 rounded-md disabled:opacity-50"
+                className="px-3 py-1 bg-gray-100 rounded-md disabled:opacity-50 focus:ring-2 focus:ring-blue-300"
+                aria-label="Go to previous page"
               >
                 Previous
               </button>
-              <span className="text-sm">
+              <span className="text-sm" role="status" aria-live="polite">
                 Page {pageNumber} of {numPages}
               </span>
               <button
                 onClick={() => setPageNumber(page => Math.min(numPages, page + 1))}
                 disabled={pageNumber >= numPages}
-                className="px-3 py-1 bg-gray-100 rounded-md disabled:opacity-50"
+                className="px-3 py-1 bg-gray-100 rounded-md disabled:opacity-50 focus:ring-2 focus:ring-blue-300"
+                aria-label="Go to next page"
               >
                 Next
               </button>
-            </div>
+            </nav>
           )}
+          
+          {/* Keyboard shortcuts help */}
+          <div className="text-center mt-4">
+            <details className="inline-block">
+              <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-700">
+                📚 Keyboard Shortcuts
+              </summary>
+              <div className="mt-2 text-xs text-gray-600 bg-gray-50 rounded-lg p-3">
+                <div className="grid grid-cols-2 gap-2 text-left">
+                  <div><kbd className="bg-white px-1 rounded border">←→</kbd> Previous/Next page</div>
+                  <div><kbd className="bg-white px-1 rounded border">↑↓</kbd> Previous/Next page</div>
+                  <div><kbd className="bg-white px-1 rounded border">Home</kbd> First page</div>
+                  <div><kbd className="bg-white px-1 rounded border">End</kbd> Last page</div>
+                </div>
+              </div>
+            </details>
+          </div>
         </div>
       )}
     </div>

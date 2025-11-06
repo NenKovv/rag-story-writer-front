@@ -39,15 +39,40 @@ export async function generateBook(payload: BookRequest): Promise<{ task_id: str
       if (isDevelopment) {
         console.error('Backend error:', errorData);
       }
-      throw new Error(`API error: ${response.status} - ${errorData?.detail || 'Unknown error'}`);
+      
+      // Create more user-friendly error messages
+      let friendlyMessage = '';
+      switch (response.status) {
+        case 400:
+          friendlyMessage = 'Some story details need to be checked. Please review your story information and try again.';
+          break;
+        case 429:
+          friendlyMessage = 'Too many stories being created right now. Please wait a moment and try again.';
+          break;
+        case 500:
+        case 502:
+        case 503:
+          friendlyMessage = 'Our story workshop is temporarily unavailable. Please try again in a few minutes.';
+          break;
+        default:
+          friendlyMessage = errorData?.detail || `Connection problem (Error ${response.status}). Please try again.`;
+      }
+      
+      throw new Error(friendlyMessage);
     }
 
     return response.json();
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error('Request timeout - please try again');
+      throw new Error('Story creation is taking longer than expected. Please try again!');
     }
+    
+    // Handle network errors more gracefully
+    if (error instanceof Error && (error.message.includes('fetch') || error.message.includes('NetworkError'))) {
+      throw new Error('Unable to connect to Story Magic. Please check your internet connection and try again.');
+    }
+    
     throw error;
   }
 }
@@ -65,15 +90,27 @@ export async function fetchTaskStatus(taskId: string): Promise<TaskStatus> {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      if (response.status === 404) {
+        throw new Error('Story not found. It might have been completed or there was an issue creating it.');
+      } else if (response.status >= 500) {
+        throw new Error('Story progress check is temporarily unavailable. Your story is still being created!');
+      } else {
+        throw new Error(`Unable to check story progress (Error ${response.status}). Please try refreshing.`);
+      }
     }
 
     return response.json();
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error('Status check timeout - please try again');
+      throw new Error('Story progress check is taking too long. Your story is still being created in the background!');
     }
+    
+    // Handle network errors for status checks
+    if (error instanceof Error && (error.message.includes('fetch') || error.message.includes('NetworkError'))) {
+      throw new Error('Unable to check story progress. Please check your internet connection.');
+    }
+    
     throw error;
   }
 }
