@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { BookRequest } from '../types/index.js';
 
 interface BookRequestFormProps {
   onSubmit: (request: BookRequest) => void;
   isLoading?: boolean;
+  initialData?: BookRequest;
 }
 
-export default function BookRequestForm({ onSubmit, isLoading }: BookRequestFormProps) {
+export default function BookRequestForm({ onSubmit, isLoading, initialData }: BookRequestFormProps) {
   const [formData, setFormData] = useState<BookRequest>({
     title: '',
     language: 'BG',
@@ -15,6 +16,29 @@ export default function BookRequestForm({ onSubmit, isLoading }: BookRequestForm
     include_images: true,
     hero_name: '',
   });
+
+  // Load initial data from props or localStorage
+  useEffect(() => {
+    const loadInitialData = () => {
+      if (initialData) {
+        setFormData(initialData);
+        return;
+      }
+      
+      // Try to load from localStorage
+      const savedData = localStorage.getItem('storyFormData');
+      if (savedData) {
+        try {
+          const parsedData = JSON.parse(savedData);
+          setFormData(parsedData);
+        } catch (error) {
+          console.warn('Failed to parse saved form data:', error);
+        }
+      }
+    };
+
+    loadInitialData();
+  }, [initialData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
