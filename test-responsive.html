@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind Responsive Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-8">
+    <h1 class="text-2xl font-bold mb-4">Tailwind Responsive Test</h1>
+    
+    <div class="border border-gray-300 p-4 mb-4">
+        <h2 class="font-semibold mb-2">Test Case: Two Separate Spans</h2>
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">1</div>
+            <span class="text-sm font-medium text-blue-600 hidden sm:inline">Story Details (Desktop)</span>
+            <span class="text-sm font-medium text-blue-600 inline sm:hidden">Details (Mobile)</span>
+        </div>
+    </div>
+
+    <div class="border border-gray-300 p-4 mb-4">
+        <h2 class="font-semibold mb-2">Current Browser Width Info</h2>
+        <p id="width-info"></p>
+    </div>
+
+    <script>
+        function updateWidth() {
+            document.getElementById('width-info').textContent = `Window width: ${window.innerWidth}px (sm breakpoint is 640px)`;
+        }
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+    </script>
+</body>
+</html>

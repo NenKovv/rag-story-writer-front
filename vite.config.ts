@@ -10,6 +10,9 @@ export default defineConfig({
       },
     }),
   ],
+  css: {
+    postcss: './postcss.config.js',
+  },
   // Removed pdfjs-dist optimization since we're using react-pdf's bundled version
   build: {
     commonjsOptions: {
