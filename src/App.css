@@ -1,0 +1,29 @@
+/* Reset margin on body and root */
+body,
+#root {
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Ensure proper box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default button styles */
+button {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Base focus styles */
+:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
