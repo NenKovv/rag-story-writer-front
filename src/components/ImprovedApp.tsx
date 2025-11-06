@@ -189,10 +189,11 @@ export default function ImprovedApp() {
             <div className="mt-8 text-center">
               <button
                 onClick={handleStartOver}
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-xl hover:from-purple-700 hover:to-blue-700 transition-colors focus:ring-4 focus:ring-purple-300"
+                className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all duration-200 focus:ring-4 focus:ring-blue-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                <span className="mr-2">✨</span>
-                Create Another Story
+                <span className="mr-3 text-xl">✨</span>
+                <span className="text-lg">Create Another Story</span>
+                <span className="ml-3 text-xl">✨</span>
               </button>
             </div>
           </div>

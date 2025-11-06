@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTaskWebSocket } from '../hooks/useTaskWebSocket.js';
 import { fetchTaskStatus } from '../api/api.js';
 import { CheckCircleIcon, ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';

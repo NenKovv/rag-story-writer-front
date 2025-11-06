@@ -122,11 +122,11 @@ export default function ImprovedPDFPreview({ pdfUrl }: PDFPreviewProps) {
             <a
               href={encodedPdfUrl}
               download
-              className="flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-colors focus:ring-4 focus:ring-purple-300"
+              className="flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all duration-200 focus:ring-4 focus:ring-green-300 shadow-md hover:shadow-lg font-semibold"
               aria-label="Download PDF story"
             >
-              <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
-              <span className="text-sm font-medium">Download Story</span>
+              <ArrowDownTrayIcon className="h-5 w-5 mr-2 text-white" />
+              <span className="text-sm font-bold text-white">Download Story</span>
             </a>
           </div>
         </div>

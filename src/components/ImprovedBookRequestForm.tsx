@@ -213,21 +213,23 @@ export default function ImprovedBookRequestForm({ onSubmit, isLoading }: BookReq
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 px-6 rounded-xl font-semibold text-lg
-                     hover:from-purple-700 hover:to-blue-700 
-                     disabled:opacity-50 disabled:cursor-not-allowed
-                     focus:ring-4 focus:ring-purple-300 focus:outline-none
-                     transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-xl font-semibold text-lg
+                     disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600
+                     focus:ring-4 focus:ring-blue-300 focus:outline-none
+                     transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100
+                     shadow-lg hover:shadow-xl border-0"
             aria-describedby={`${formId}-submit-help`}
           >
             {isLoading ? (
-              <span className="flex items-center justify-center">
+              <span className="flex items-center justify-center text-white">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
-                Creating your magical story...
+                <span className="text-white font-semibold">Creating your magical story...</span>
               </span>
             ) : (
-              <span className="flex items-center justify-center">
-                ✨ Create My Story ✨
+              <span className="flex items-center justify-center text-white">
+                <span className="text-2xl mr-2">✨</span>
+                <span className="text-white font-bold">Create My Story</span>
+                <span className="text-2xl ml-2">✨</span>
               </span>
             )}
           </button>

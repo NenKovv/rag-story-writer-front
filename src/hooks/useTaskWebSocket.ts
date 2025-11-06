@@ -21,7 +21,7 @@ export function useTaskWebSocket(taskId: string): UseTaskWebSocketResult {
   const [error, setError] = useState<string>();
   const [connectionAttempts, setConnectionAttempts] = useState(0);
   
-  const reconnectTimeoutRef = useRef<number>();
+  const reconnectTimeoutRef = useRef<number | null>(null);
   const isUnmountedRef = useRef(false);
 
   const resetReconnectTimeout = useCallback(() => {
