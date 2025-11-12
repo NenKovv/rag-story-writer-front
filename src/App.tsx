@@ -5,6 +5,7 @@ import BookRequestForm from './components/BookRequestForm.js';
 import TaskStatus from './components/TaskStatus.js';
 import PDFPreview from './components/PDFPreview.js';
 import ErrorBanner from './components/ErrorBanner.js';
+import MagicLinkAuth from './components/MagicLinkAuth.js';
 
 export default function App() {
   const [taskId, setTaskId] = useState<string>();
@@ -13,6 +14,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<BookRequest | undefined>();
   const [showEditConfirm, setShowEditConfirm] = useState(false);
+  const [showMagicLinkAuth, setShowMagicLinkAuth] = useState(false); // Toggle for testing
 
   const handleSubmit = async (request: BookRequest) => {
     try {
@@ -66,7 +68,15 @@ export default function App() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-2">
               <span aria-label="Story Weaver - Magical Story Creation App">✨ Story Weaver ✨</span>
             </h1>
-            <p className="text-lg text-gray-600" role="doc-subtitle">Create magical AI-powered storybooks for children</p>
+            <p className="text-lg text-gray-600 mb-4" role="doc-subtitle">Create magical AI-powered storybooks for children</p>
+            
+            {/* Demo Toggle Button - Centered below subtitle */}
+            <button
+              onClick={() => setShowMagicLinkAuth(!showMagicLinkAuth)}
+              className="text-sm bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-colors shadow-lg"
+            >
+              {showMagicLinkAuth ? '📚 Back to Story Form' : '🔗 Test Magic Link Auth'}
+            </button>
           </div>
         </div>
       </header>
@@ -267,7 +277,24 @@ export default function App() {
           </div>
         )}
 
-        {!taskId && (
+        {/* Magic Link Authentication Component (Demo) */}
+        {showMagicLinkAuth && (
+          <section aria-labelledby="magic-link-heading">
+            <MagicLinkAuth 
+              onAuthSuccess={(tokenData) => {
+                console.log('Auth success:', tokenData);
+                // You can handle successful auth here
+              }}
+              onGenerateBook={() => {
+                console.log('Generate book clicked');
+                // Switch back to story form after auth
+                setShowMagicLinkAuth(false);
+              }}
+            />
+          </section>
+        )}
+
+        {!showMagicLinkAuth && !taskId && (
           <section aria-labelledby="story-form-heading" className="max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-orange-100">
               <BookRequestForm 
@@ -279,7 +306,7 @@ export default function App() {
           </section>
         )}
 
-        {taskId && !pdfUrl && (
+        {!showMagicLinkAuth && taskId && !pdfUrl && (
           <section aria-labelledby="story-progress-heading" className="max-w-3xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-pink-100">
               <TaskStatus 
@@ -290,7 +317,7 @@ export default function App() {
           </section>
         )}
 
-        {pdfUrl && (
+        {!showMagicLinkAuth && pdfUrl && (
           <section aria-labelledby="story-preview-heading" className="bg-white rounded-2xl shadow-xl mx-4 lg:mx-8 p-6 border border-purple-100">
             <PDFPreview pdfUrl={pdfUrl} />
           </section>
